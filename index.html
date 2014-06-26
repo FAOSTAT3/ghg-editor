@@ -1,10 +1,331 @@
-<!DOCTYPE html>
 <html>
-<head lang="en">
-    <meta charset="UTF-8">
-    <title></title>
-</head>
-<body>
-
-</body>
+    <head>
+        <title>GHG Editor</title>
+        <link rel='icon' type='image/png' href='http://fenixapps.fao.org/repository/favicon/faostat.png'>
+        <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+        <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
+        <script type='text/javascript' src='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js'></script>
+        <script type='text/javascript' src='http://fenixapps.fao.org/repository/js/chosen/1.0.0/chosen.jquery.min.js'></script>
+        <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.js'></script>
+        <script type='text/javascript' src='js/ghg-editor.js'></script>
+        <link href='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css' rel='stylesheet'>
+        <link href='http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet'>
+        <link href='http://fenixapps.fao.org/repository/js/chosen/1.0.0/chosen.min.css' rel='stylesheet'>
+        <link href='http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js' rel='stylesheet'>
+        <link href='css/ghg-editor.css' rel='stylesheet'>
+        <style>
+            .chosen-single {
+                height: 35px !important;
+                line-height: 35px !important;
+            }
+        </style>
+    </head>
+    <body onload='GHGEDITOR.init();'>
+        <div class='container'>
+            <div class='page-header'>
+                <h1>
+                    <i class='fa fa-info-circle'></i> GHG Editor
+                </h1>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
+                    Please select a country:
+                </div>
+                <div class='col-xs-12 col-sm-10 col-md-10 col-lg-10'>
+                    <select style='width: 100%;' id='country-list' data-placeholder='Please select a source...' class='selector'>
+                        <option selected></option>
+                        <option>Costa Rica</option>
+                        <option>England</option>
+                        <option>Italy</option>
+                        <option>Uruguay</option>
+                    </select>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                    <div class='spacer'></div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                    <div style='width: 100%; overflow: scroll;'>
+                        <table class='table table-bordered table-condensed table-hover'>
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Category</th>
+                                    <th>1990</th>
+                                    <th>1991</th>
+                                    <th>1992</th>
+                                    <th>1993</th>
+                                    <th>1994</th>
+                                    <th>1995</th>
+                                    <th>1996</th>
+                                    <th>1997</th>
+                                    <th>1998</th>
+                                    <th>1999</th>
+                                    <th>2000</th>
+                                    <th>2001</th>
+                                    <th>2002</th>
+                                    <th>2003</th>
+                                    <th>2004</th>
+                                    <th>2005</th>
+                                    <th>2006</th>
+                                    <th>2007</th>
+                                    <th>2008</th>
+                                    <th>2009</th>
+                                    <th>2010</th>
+                                    <th>2011</th>
+                                    <th>2012</th>
+                                    <th>2013</th>
+                                    <th>2014</th>
+                                    <th>2015</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <th>4</th>
+                                    <th>Agriculture</th>
+                                    <td><input id='test' style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                </tr>
+                                <tr>
+                                    <th>4.A</th>
+                                    <th>Enteric Fermentation</th>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                </tr>
+                                <tr>
+                                    <th>4.B</th>
+                                    <th>Manure Management</th>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                </tr>
+                                <tr>
+                                    <th>4.C</th>
+                                    <th>Rice Cultivation</th>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                </tr>
+                                <tr>
+                                    <th>4.D</th>
+                                    <th>Agricultural Soils</th>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                </tr>
+                                <tr>
+                                    <th>4.E</th>
+                                    <th>
+                                        <div style='width: 300px;'>
+                                            Prescribed Burning of Savannas
+                                        </div>
+                                    </th>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                </tr>
+                                <tr>
+                                    <th>4.F</th>
+                                    <th>Field Burning of Agricultural Residues</th>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                    <td><input style='width: 100px;' class='form-control input-sm' type='number'></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                    <div class='spacer'></div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                    <button style='width: 100%;' class='btn' onclick='GHGEDITOR.queryDB();'>Query DB</button>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                    <div style='width: 100%;'>CHART 1</div>
+                </div>
+                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                    <div style='width: 100%;'>CHART 2</div>
+                </div>
+                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                    <div style='width: 100%;'>CHART 3</div>
+                </div>
+                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                    <div style='width: 100%;'>CHART 4</div>
+                </div>
+            </div>
+        </div>
+    </body>
 </html>
