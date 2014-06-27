@@ -91,7 +91,6 @@ var GHGEDITOR = (function() {
     function createChart(chart_id, title, series) {
         var p = {
             chart: {
-                type: 'line',
                 events: {
                     load: function() {
                         for (var i = 0 ; i < series.length ; i++) {
@@ -139,6 +138,7 @@ var GHGEDITOR = (function() {
         for (var i = 0 ; i < series.length ; i++) {
             p.series[i] = {};
             p.series[i].name = series[i].name;
+            p.series[i].type = 'column';
         }
         p.series[series.length] = {};
         p.series[series.length].name = 'User Data';
