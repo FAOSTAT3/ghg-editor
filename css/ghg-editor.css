@@ -1,3 +1,7 @@
 .spacer {
     height: 16px;
 }
+
+.table_cell {
+    line-height: 30px;
+}
