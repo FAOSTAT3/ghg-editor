@@ -142,6 +142,7 @@ var GHGEDITOR = (function() {
         }
         p.series[series.length] = {};
         p.series[series.length].name = 'User Data';
+        p.series[series.length].type = 'column';
         $('#' + chart_id).highcharts(p);
     };
 
@@ -202,7 +203,7 @@ var GHGEDITOR = (function() {
                 var year = inputs[i].id.substring(1 + inputs[i].id.indexOf('_'));
                 var value = $(inputs[i]).val();
                 var tmp = [];
-                tmp.push(parseInt(year));
+                tmp.push(Date.UTC(parseInt(year)));
                 tmp.push(parseFloat(value));
                 data.push(tmp);
             }
