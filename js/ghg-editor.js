@@ -133,17 +133,15 @@ var GHGEDITOR = (function() {
                 align: 'center',
                 verticalAlign: 'bottom',
                 borderWidth: 0
-            },
-            series: [{
-                type: 'line',
-                name: series[0].name,
-                data: []
-            }, {
-                type: 'line',
-                name: 'User Data',
-                data: []
-            }]
+            }
         };
+        p.series = [];
+        for (var i = 0 ; i < series.length ; i++) {
+            p.series[i] = {};
+            p.series[i].name = series[i].name;
+        }
+        p.series[series.length] = {};
+        p.series[series.length].name = 'User Data';
         $('#' + chart_id).highcharts(p);
     };
 
