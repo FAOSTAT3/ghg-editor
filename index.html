@@ -30,7 +30,9 @@
             </div>
             <div class='row'>
                 <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
-                    Please select a country:
+                    <div style='line-height: 34px;'>
+                        Please select a country:
+                    </div>
                 </div>
                 <div class='col-xs-12 col-sm-10 col-md-10 col-lg-10'>
                     <select style='width: 100%;' id='country-list' data-placeholder='Please select a source...' class='selector'>
@@ -405,16 +407,16 @@
                     </div>
                 </div>
             </div>
-            <div class='row'>
-                <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
-                    <div class='spacer'></div>
-                </div>
-            </div>
-            <div class='row'>
-                <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
-                    <button style='width: 100%;' class='btn' onclick='GHGEDITOR.addPointToChart1();'>Refresh Charts</button>
-                </div>
-            </div>
+            <!--<div class='row'>-->
+                <!--<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>-->
+                    <!--<div class='spacer'></div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--<div class='row'>-->
+                <!--<div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>-->
+                    <!--<button style='width: 100%;' class='btn' onclick='GHGEDITOR.addPointToChart1();'>Refresh Charts</button>-->
+                <!--</div>-->
+            <!--</div>-->
             <div class='page-header'>
                 <h1>
                     <i class='fa fa-bar-chart-o'></i> Charts
@@ -2168,7 +2170,7 @@
             </div>
             <div class='page-header'>
                 <h1>
-                    <a style='cursor: pointer;' onclick='GHGEDITOR.showHideTable("left_table_5", "right_table_5", "label_table_5");'>
+                    <a name='table_5' style='cursor: pointer;' onclick='GHGEDITOR.showHideTable("left_table_5", "right_table_5", "label_table_5");'>
                         <i id='label_table_5' class='fa fa-expand fa-border'></i>
                     </a>
                     Normalised % difference (CountryNewData - NC) / NC
