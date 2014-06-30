@@ -5,3 +5,7 @@
 .table_cell {
     line-height: 30px;
 }
+
+.table_cell.year {
+    text-align: center;
+}

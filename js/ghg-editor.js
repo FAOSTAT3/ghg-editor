@@ -6,11 +6,21 @@ var GHGEDITOR = (function() {
 
     function init() {
 
+        /* Initiate tables. */
+        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data');
+        createTable('faostat_emissions_db_nc', 'FAOSTAT Emissions Database - National Communication', 1990, 2015, 'faostat_emissions_db_nc');
+        createTable('cnd_fs_difference', '% Difference (CountryNewData - FAOSTAT) / FAOSTAT', 1990, 2015, 'cnd_fs_difference');
+        createTable('normalised_cnd_fs_difference', 'Normalised % difference (CountryNewData - FAOSTAT) / FAOSTAT ', 1990, 2015, 'normalised_cnd_fs_difference');
+        createTable('cnd_nc_difference', '% Difference (CountryNewData - NC) / NC', 1990, 2015, 'cnd_nc_difference');
+        createTable('normalised_cnd_nc_difference', 'Normalised % Difference (CountryNewData - NC) / NC', 1990, 2015, 'normalised_cnd_nc_difference');
+
+        /* Initiate Chosen. */
         $('.selector').chosen({
             disable_search_threshold: 10,
             allow_single_deselect: true
         });
 
+        // TODO Example of adding point to a chart
         $('input').keyup(function() {
             var v = parseFloat($('#' + this.id).val());
             if (isNaN(v) || v < 0) {
@@ -21,6 +31,7 @@ var GHGEDITOR = (function() {
             }
         });
 
+        /* Chart 1 Definition. */
         var series_1 = [
             {
                 name: 'Agricultural Total (FAOSTAT)',
@@ -32,6 +43,7 @@ var GHGEDITOR = (function() {
         ];
         createChart('chart_1', 'Agricultural Total', series_1);
 
+        /* Chart 2 Definition. */
         var series_2 = [
             {
                 name: 'Enteric Fermentation (FAOSTAT)',
@@ -50,6 +62,7 @@ var GHGEDITOR = (function() {
         ];
         createChart('chart_2', 'Enteric Fermentation and Manure Management', series_2);
 
+        /* Chart 3 Definition. */
         var series_3 = [
             {
                 name: 'Rice Cultivation (FAOSTAT)',
@@ -68,6 +81,7 @@ var GHGEDITOR = (function() {
         ];
         createChart('chart_3', 'Rice Cultivation and Agricultural Soils', series_3);
 
+        /* Chart 4 Definition. */
         var series_4 = [
             {
                 name: 'Burning of Savanna (FAOSTAT)',
@@ -88,6 +102,7 @@ var GHGEDITOR = (function() {
 
     };
 
+    /* Charts template. */
     function createChart(chart_id, title, series) {
         var p = {
             chart: {
@@ -146,6 +161,7 @@ var GHGEDITOR = (function() {
         $('#' + chart_id).highcharts(p);
     };
 
+    /* Query DB and prepare the payload for the charts. */
     function plotSeries(series, domain_code, country, item, element) {
         var p = {};
         p.datasource = 'faostat';
@@ -194,6 +210,7 @@ var GHGEDITOR = (function() {
         });
     };
 
+    // TODO Example of adding point to a chart
     function addPointToChart1() {
         var chart = $('#chart_1').highcharts();
         var data = [];
@@ -211,6 +228,7 @@ var GHGEDITOR = (function() {
         chart.series[1].setData(data);
     };
 
+    /* Show or hide a section. */
     function showHideTable(left_table_id, right_table_id, label_id) {
         if ($('#' + left_table_id).css('display') == 'none') {
             $('#' + left_table_id).css('display', 'block');
@@ -232,6 +250,66 @@ var GHGEDITOR = (function() {
                     $('#' + right_table_id).css('display', 'none');
                 });
         }
+    };
+
+    /* Create the tables through Mustache templating. */
+    function createTable(render_id, title, start_year, end_year, id_prefix) {
+
+        /* Load template. */
+        $.get('html/templates.html', function (templates) {
+
+            /* Create time-range and inputs. */
+            var years = [];
+            var inputs_4 = [];
+            var inputs_4A = [];
+            var inputs_4B = [];
+            var inputs_4C = [];
+            var inputs_4D = [];
+            var inputs_4E = [];
+            var inputs_4F = [];
+            for (var i = start_year ; i <= end_year ; i++) {
+                years.push({'year': i});
+                inputs_4.push({'input_id_4': id_prefix + '_4_' + i});
+                inputs_4A.push({'input_id_4A': id_prefix + '_4A_' + i});
+                inputs_4B.push({'input_id_4B': id_prefix + '_4A_' + i});
+                inputs_4C.push({'input_id_4C': id_prefix + '_4A_' + i});
+                inputs_4D.push({'input_id_4D': id_prefix + '_4A_' + i});
+                inputs_4E.push({'input_id_4E': id_prefix + '_4A_' + i});
+                inputs_4F.push({'input_id_4F': id_prefix + '_4A_' + i});
+            }
+
+            /* Define placeholders. */
+            var view = {
+                collapse_id: id_prefix + '_collapse_button',
+                title: title,
+                left_table_id: id_prefix + '_left_table',
+                right_table_id: id_prefix + '_right_table',
+                years: years,
+                inputs_4: inputs_4,
+                inputs_4A: inputs_4A,
+                inputs_4B: inputs_4B,
+                inputs_4C: inputs_4C,
+                inputs_4D: inputs_4D,
+                inputs_4E: inputs_4E,
+                inputs_4F: inputs_4F
+            };
+
+            /* Load the right template. */
+            var template = $(templates).filter('#g1_table').html();
+
+            /* Substitute placeholders. */
+            var render = render = Mustache.render(template, view);
+
+            /* Render the HTML. */
+            document.getElementById(render_id).innerHTML = render;
+
+            /* Bind show/hide function. */
+            $('#' + id_prefix + '_collapse_button').on('click', function() {
+                GHGEDITOR.showHideTable(id_prefix + '_left_table', id_prefix + '_right_table', id_prefix + '_collapse_button');
+            });
+
+        });
+
     };
 
     return {
