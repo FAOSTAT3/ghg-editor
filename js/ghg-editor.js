@@ -8,7 +8,8 @@ var GHGEDITOR = (function() {
 
         /* Initiate tables. */
         createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data');
-        createTable('faostat_emissions_db_nc', 'FAOSTAT Emissions Database - National Communication', 1990, 2015, 'faostat_emissions_db_nc');
+        createTable('emissions_db_nc', 'Emissions Database - National Communication', 1990, 2015, 'emissions_db_nc');
+        createTable('emissions_db_faostat', 'Emissions Database - FAOSTAT', 1990, 2015, 'emissions_db_faostat');
         createTable('cnd_fs_difference', '% Difference (CountryNewData - FAOSTAT) / FAOSTAT', 1990, 2015, 'cnd_fs_difference');
         createTable('normalised_cnd_fs_difference', 'Normalised % difference (CountryNewData - FAOSTAT) / FAOSTAT ', 1990, 2015, 'normalised_cnd_fs_difference');
         createTable('cnd_nc_difference', '% Difference (CountryNewData - NC) / NC', 1990, 2015, 'cnd_nc_difference');
@@ -252,6 +253,21 @@ var GHGEDITOR = (function() {
         }
     };
 
+    /* Show or hide a section. */
+    function showHideCharts() {
+        if ($('#charts_container').css('display') == 'none') {
+            $('#charts_container').css('display', 'block');
+            $('#charts_container').animate({opacity: 1});
+            $('#charts_collapse_button').removeClass('fa fa-expand').addClass('fa fa-compress');
+        } else {
+            $('#charts_container').animate(
+                {opacity: 0}, function() {
+                    $('#charts_container').css('display', 'none');
+                });
+            $('#charts_collapse_button').removeClass('fa fa-compress').addClass('fa fa-expand');
+        }
+    };
+
     /* Create the tables through Mustache templating. */
     function createTable(render_id, title, start_year, end_year, id_prefix) {
 
@@ -316,7 +332,8 @@ var GHGEDITOR = (function() {
         CONFIG : CONFIG,
         init : init,
         addPointToChart1:addPointToChart1,
-        showHideTable: showHideTable
+        showHideTable: showHideTable,
+        showHideCharts: showHideCharts
     };
 
 })();

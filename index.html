@@ -1,33 +1,47 @@
 <html>
+
     <head>
+
         <title>GHG Editor</title>
         <link rel='icon' type='image/png' href='http://fenixapps.fao.org/repository/favicon/faostat.png'>
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+
         <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
         <script type='text/javascript' src='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js'></script>
         <script type='text/javascript' src='http://fenixapps.fao.org/repository/js/chosen/1.0.0/chosen.jquery.min.js'></script>
         <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.js'></script>
         <script type='text/javascript' src='http://code.highcharts.com/highcharts.js'></script>
         <script type='text/javascript' src='js/ghg-editor.js'></script>
+
         <link href='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css' rel='stylesheet'>
         <link href='http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet'>
         <link href='http://fenixapps.fao.org/repository/js/chosen/1.0.0/chosen.min.css' rel='stylesheet'>
         <link href='http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js' rel='stylesheet'>
         <link href='css/ghg-editor.css' rel='stylesheet'>
+
         <style>
             .chosen-single {
                 height: 35px !important;
                 line-height: 35px !important;
             }
         </style>
+
     </head>
+
     <body onload='GHGEDITOR.init();'>
+
         <div class='container'>
-            <div class='page-header'>
-                <h1>
-                    <i class='fa fa-info-circle'></i> GHG Editor
-                </h1>
+
+            <!-- Page title. -->
+            <div class='row'>
+                <div class='page-header'>
+                    <h1>
+                        <i class='fa fa-info-circle'></i> GHG Editor
+                    </h1>
+                </div>
             </div>
+
+            <!-- Country selector. -->
             <div class='row'>
                 <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
                     <div style='line-height: 34px;'>
@@ -44,63 +58,94 @@
                     </select>
                 </div>
             </div>
+
+            <!-- Country New Data. -->
             <div class='row'>
                 <div id='country_new_data'>
                     <i class='fa fa-refresh fa-spin fa-5x'></i>
                 </div>
             </div>
-            <div class='page-header'>
-                <h1>
-                    <i class='fa fa-bar-chart-o'></i> Charts
-                </h1>
-            </div>
+
+            <!-- Charts. -->
             <div class='row'>
-                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                    <div style='width: 100%;' id='chart_1'>
-                        <i class='fa fa-refresh fa-spin fa-5x'></i>
-                    </div>
-                </div>
-                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                    <div style='width: 100%;' id='chart_2'>
-                        <i class='fa fa-refresh fa-spin fa-5x'></i>
-                    </div>
-                </div>
-                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                    <div style='width: 100%;' id='chart_3'>
-                        <i class='fa fa-refresh fa-spin fa-5x'></i>
-                    </div>
-                </div>
-                <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                    <div style='width: 100%;' id='chart_4'>
-                        <i class='fa fa-refresh fa-spin fa-5x'></i>
-                    </div>
+                <div class='page-header'>
+                    <h1>
+                        <a style='cursor: pointer;' onclick='GHGEDITOR.showHideCharts();'>
+                            <i id='charts_collapse_button' class='fa fa-compress fa-border'></i>
+                        </a>
+                        Charts
+                    </h1>
                 </div>
             </div>
             <div class='row'>
-                <div id='faostat_emissions_db_nc'>
+                <div id='charts_container'>
+                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                        <div style='width: 100%;' id='chart_1'>
+                            <i class='fa fa-refresh fa-spin fa-5x'></i>
+                        </div>
+                    </div>
+                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                        <div style='width: 100%;' id='chart_2'>
+                            <i class='fa fa-refresh fa-spin fa-5x'></i>
+                        </div>
+                    </div>
+                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                        <div style='width: 100%;' id='chart_3'>
+                            <i class='fa fa-refresh fa-spin fa-5x'></i>
+                        </div>
+                    </div>
+                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                        <div style='width: 100%;' id='chart_4'>
+                            <i class='fa fa-refresh fa-spin fa-5x'></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Emissions Database - National Communication -->
+            <div class='row'>
+                <div id='emissions_db_nc'>
                     <i class='fa fa-refresh fa-spin fa-5x'></i>
                 </div>
             </div>
+
+            <!-- Emissions Database - FAOSTAT -->
+            <div class='row'>
+                <div id='emissions_db_faostat'>
+                    <i class='fa fa-refresh fa-spin fa-5x'></i>
+                </div>
+            </div>
+
+            <!-- % Difference (CountryNewData - FAOSTAT) / FAOSTAT -->
             <div class='row'>
                 <div id='cnd_fs_difference'>
                     <i class='fa fa-refresh fa-spin fa-5x'></i>
                 </div>
             </div>
+
+            <!-- Normalised % difference (CountryNewData - FAOSTAT) / FAOSTAT -->
             <div class='row'>
                 <div id='normalised_cnd_fs_difference'>
                     <i class='fa fa-refresh fa-spin fa-5x'></i>
                 </div>
             </div>
+
+            <!-- % Difference (CountryNewData - NC) / NC -->
             <div class='row'>
                 <div id='cnd_nc_difference'>
                     <i class='fa fa-refresh fa-spin fa-5x'></i>
                 </div>
             </div>
+
+            <!-- Normalised % Difference (CountryNewData - NC) / NC -->
             <div class='row'>
                 <div id='normalised_cnd_nc_difference'>
                     <i class='fa fa-refresh fa-spin fa-5x'></i>
                 </div>
             </div>
+
         </div>
+
     </body>
+
 </html>
