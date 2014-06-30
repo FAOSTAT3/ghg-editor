@@ -32,12 +32,53 @@ var GHGEDITOR = (function() {
             }
         });
 
+        $.ajax({
+
+            type: 'GET',
+            url: 'http://faostat3.fao.org/wds/rest/procedures/countries/faostat/GT/E',
+            dataType: 'json',
+
+            success: function (response) {
+
+                var json = response;
+                if (typeof json == 'string')
+                    json = $.parseJSON(response);
+
+                var s = '<option selected>Please Select a Country...</option>';
+                for (var i = 0 ; i < json.length ; i++)
+                    s += '<option value="' + json[i][0] + '">' + json[i][1] + '</option>';
+                document.getElementById('country_selector').innerHTML = s;
+                $('#country_selector').trigger('chosen:updated');
+
+            },
+
+            error: function (err, b, c) {
+
+            }
+
+        });
+
+        /* Create charts and load tables on country selection change. */
+        $('#country_selector').on('change', function() {
+
+            /* Get selected country. */
+            var country = $('#country_selector').find(":selected").val();
+            createCharts(country);
+            
+        });
+
+
+
+    };
+
+    function createCharts(country) {
+
         /* Chart 1 Definition. */
         var series_1 = [
             {
                 name: 'Agricultural Total (FAOSTAT)',
                 domain: 'GT',
-                country: '48',
+                country: country,
                 item: '1711',
                 element: '7231'
             }
@@ -49,7 +90,7 @@ var GHGEDITOR = (function() {
             {
                 name: 'Enteric Fermentation (FAOSTAT)',
                 domain: 'GT',
-                country: '48',
+                country: country,
                 item: '5058',
                 element: '7231'
             },
@@ -68,14 +109,14 @@ var GHGEDITOR = (function() {
             {
                 name: 'Rice Cultivation (FAOSTAT)',
                 domain: 'GT',
-                country: '48',
+                country: country,
                 item: '5060',
                 element: '7231'
             },
             {
                 name: 'Agricultural Soils (FAOSTAT)',
                 domain: 'GT',
-                country: '48',
+                country: country,
                 item: '1709',
                 element: '7231'
             }
@@ -296,6 +337,7 @@ var GHGEDITOR = (function() {
 
             /* Define placeholders. */
             var view = {
+                section_name: id_prefix,
                 collapse_id: id_prefix + '_collapse_button',
                 title: title,
                 left_table_id: id_prefix + '_left_table',
