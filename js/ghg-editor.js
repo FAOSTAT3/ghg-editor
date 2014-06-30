@@ -64,7 +64,7 @@ var GHGEDITOR = (function() {
             /* Get selected country. */
             var country = $('#country_selector').find(":selected").val();
             createCharts(country);
-            
+
         });
 
 
@@ -197,10 +197,13 @@ var GHGEDITOR = (function() {
             p.series[i].name = series[i].name;
             p.series[i].type = 'column';
         }
-        p.series[series.length] = {};
-        p.series[series.length].name = 'User Data';
-        p.series[series.length].type = 'column';
         $('#' + chart_id).highcharts(p);
+        var chart = $('#' + chart_id).highcharts();
+        for (var i = 0 ; i < series.length ; i++) {
+            chart.addSeries({
+                name: chart.series[i].name.replace('(FAOSTAT)', '(User Data)')
+            });
+        }
     };
 
     /* Query DB and prepare the payload for the charts. */
