@@ -179,7 +179,7 @@ var GHGEDITOR = (function() {
                 var year = 1990;
                 for (var i = json.length - 1 ; i >= 0 ; i--) {
                     var tmp = [];
-                    tmp.push(Date.UTC(parseInt(year)));
+                    tmp.push(Date.UTC(parseInt(json[i][10])));
                     tmp.push(parseFloat(json[i][13]));
                     data.push(tmp);
                     year++;
@@ -211,10 +211,34 @@ var GHGEDITOR = (function() {
         chart.series[1].setData(data);
     };
 
+    function showHideTable(left_table_id, right_table_id, label_id) {
+        if ($('#' + left_table_id).css('display') == 'none') {
+            $('#' + left_table_id).css('display', 'block');
+            $('#' + left_table_id).animate({opacity: 1});
+            $('#' + label_id).removeClass('fa fa-expand').addClass('fa fa-compress');
+        } else {
+            $('#' + left_table_id).animate(
+                {opacity: 0}, function() {
+                    $('#' + left_table_id).css('display', 'none');
+                });
+            $('#' + label_id).removeClass('fa fa-compress').addClass('fa fa-expand');
+        }
+        if ($('#' + right_table_id).css('display') == 'none') {
+            $('#' + right_table_id).css('display', 'block');
+            $('#' + right_table_id).animate({opacity: 1});
+        } else {
+            $('#' + right_table_id).animate(
+                {opacity: 0}, function() {
+                    $('#' + right_table_id).css('display', 'none');
+                });
+        }
+    };
+
     return {
         CONFIG : CONFIG,
         init : init,
-        addPointToChart1:addPointToChart1
+        addPointToChart1:addPointToChart1,
+        showHideTable: showHideTable
     };
 
 })();
