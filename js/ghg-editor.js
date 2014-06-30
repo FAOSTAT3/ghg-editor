@@ -7,7 +7,7 @@ var GHGEDITOR = (function() {
     function init() {
 
         /* Initiate tables. */
-        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data');
+        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', addDataToEntericFermentation);
         createTable('emissions_db_nc', 'Emissions Database - National Communication', 1990, 2015, 'emissions_db_nc');
         createTable('emissions_db_faostat', 'Emissions Database - FAOSTAT', 1990, 2015, 'emissions_db_faostat');
         createTable('cnd_fs_difference', '% Difference (CountryNewData - FAOSTAT) / FAOSTAT', 1990, 2015, 'cnd_fs_difference');
@@ -66,8 +66,6 @@ var GHGEDITOR = (function() {
             createCharts(country);
 
         });
-
-
 
     };
 
@@ -255,24 +253,6 @@ var GHGEDITOR = (function() {
         });
     };
 
-    // TODO Example of adding point to a chart
-    function addPointToChart1() {
-        var chart = $('#chart_1').highcharts();
-        var data = [];
-        var inputs = $('input');
-        for (var i = 0 ; i < inputs.length ; i++) {
-            if (inputs[i].id.indexOf('4_') > -1) {
-                var year = inputs[i].id.substring(1 + inputs[i].id.indexOf('_'));
-                var value = $(inputs[i]).val();
-                var tmp = [];
-                tmp.push(Date.UTC(parseInt(year)));
-                tmp.push(parseFloat(value));
-                data.push(tmp);
-            }
-        }
-        chart.series[1].setData(data);
-    };
-
     /* Show or hide a section. */
     function showHideTable(left_table_id, right_table_id, label_id) {
         if ($('#' + left_table_id).css('display') == 'none') {
@@ -313,7 +293,7 @@ var GHGEDITOR = (function() {
     };
 
     /* Create the tables through Mustache templating. */
-    function createTable(render_id, title, start_year, end_year, id_prefix) {
+    function createTable(render_id, title, start_year, end_year, id_prefix, callback) {
 
         /* Load template. */
         $.get('html/templates.html', function (templates) {
@@ -331,11 +311,11 @@ var GHGEDITOR = (function() {
                 years.push({'year': i});
                 inputs_4.push({'input_id_4': id_prefix + '_4_' + i});
                 inputs_4A.push({'input_id_4A': id_prefix + '_4A_' + i});
-                inputs_4B.push({'input_id_4B': id_prefix + '_4A_' + i});
-                inputs_4C.push({'input_id_4C': id_prefix + '_4A_' + i});
-                inputs_4D.push({'input_id_4D': id_prefix + '_4A_' + i});
-                inputs_4E.push({'input_id_4E': id_prefix + '_4A_' + i});
-                inputs_4F.push({'input_id_4F': id_prefix + '_4A_' + i});
+                inputs_4B.push({'input_id_4B': id_prefix + '_4B_' + i});
+                inputs_4C.push({'input_id_4C': id_prefix + '_4C_' + i});
+                inputs_4D.push({'input_id_4D': id_prefix + '_4D_' + i});
+                inputs_4E.push({'input_id_4E': id_prefix + '_4E_' + i});
+                inputs_4F.push({'input_id_4F': id_prefix + '_4F_' + i});
             }
 
             /* Define placeholders. */
@@ -369,8 +349,45 @@ var GHGEDITOR = (function() {
                 GHGEDITOR.showHideTable(id_prefix + '_left_table', id_prefix + '_right_table', id_prefix + '_collapse_button');
             });
 
+            /* Bind callback (if any) */
+            if (callback != null)
+                callback();
+
         });
 
+    };
+
+    function addDataToEntericFermentation() {
+        var inputs = $('input[id^=country_new_data_4A_]');
+        var chart = $('#chart_2').highcharts();
+        for (var i = 0; i < inputs.length; i++) {
+            $(inputs[i]).keyup(function() {
+                var data = [];
+                var year = Date.UTC(parseInt(inputs[i].id.substring(1 + inputs[i].id.indexOf('country_new_data_4A_'))));
+                var value = parseFloat($(inputs[i]).val());
+                var tmp = [year, value];
+                data.push(tmp);
+                chart.series[1].setData(data);
+            });
+        }
+    };
+
+    // TODO Example of adding point to a chart
+    function addPointToChart1() {
+        var chart = $('#chart_1').highcharts();
+        var data = [];
+        var inputs = $('input');
+        for (var i = 0 ; i < inputs.length ; i++) {
+            if (inputs[i].id.indexOf('4_') > -1) {
+                var year = inputs[i].id.substring(1 + inputs[i].id.indexOf('_'));
+                var value = $(inputs[i]).val();
+                var tmp = [];
+                tmp.push(Date.UTC(parseInt(year)));
+                tmp.push(parseFloat(value));
+                data.push(tmp);
+            }
+        }
+        chart.series[1].setData(data);
     };
 
     return {
