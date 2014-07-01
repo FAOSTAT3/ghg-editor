@@ -7,7 +7,7 @@ var GHGEDITOR = (function() {
     function init() {
 
         /* Initiate tables. */
-        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', addDataToEntericFermentation);
+        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', 'chart_2', addDataToChart);
         createTable('emissions_db_nc', 'Emissions Database - National Communication', 1990, 2015, 'emissions_db_nc');
         createTable('emissions_db_faostat', 'Emissions Database - FAOSTAT', 1990, 2015, 'emissions_db_faostat');
         createTable('cnd_fs_difference', '% Difference (CountryNewData - FAOSTAT) / FAOSTAT', 1990, 2015, 'cnd_fs_difference');
@@ -19,17 +19,6 @@ var GHGEDITOR = (function() {
         $('.selector').chosen({
             disable_search_threshold: 10,
             allow_single_deselect: true
-        });
-
-        // TODO Example of adding point to a chart
-        $('input').keyup(function() {
-            var v = parseFloat($('#' + this.id).val());
-            if (isNaN(v) || v < 0) {
-                console.log('invalid selection @ ' + this.id);
-            } else {
-                var year = this.id.substring(1 + this.id.indexOf('_'));
-                addPointToChart1(year, v);
-            }
         });
 
         $.ajax({
@@ -95,7 +84,7 @@ var GHGEDITOR = (function() {
             {
                 name: 'Manure Management (FAOSTAT)',
                 domain: 'GT',
-                country: '48',
+                country: country,
                 item: '5059',
                 element: '7231'
             }
@@ -126,14 +115,14 @@ var GHGEDITOR = (function() {
             {
                 name: 'Burning of Savanna (FAOSTAT)',
                 domain: 'GT',
-                country: '48',
+                country: country,
                 item: '5067',
                 element: '7231'
             },
             {
                 name: 'Burning of Crop Residues (FAOSTAT)',
                 domain: 'GT',
-                country: '48',
+                country: country,
                 item: '5066',
                 element: '7231'
             }
@@ -193,7 +182,6 @@ var GHGEDITOR = (function() {
         for (var i = 0 ; i < series.length ; i++) {
             p.series[i] = {};
             p.series[i].name = series[i].name;
-            p.series[i].type = 'column';
         }
         $('#' + chart_id).highcharts(p);
         var chart = $('#' + chart_id).highcharts();
@@ -216,8 +204,8 @@ var GHGEDITOR = (function() {
         p.decPlaces = 2;
         p.limit = 100;
         p['list1Codes'] = ['\'' + country + '\''];
-        p['list2Codes'] = ['\'' + item + '\''];
-        p['list3Codes'] = ['\'' + element + '\''];
+        p['list3Codes'] = ['\'' + item + '\''];
+        p['list2Codes'] = ['\'' + element + '\''];
         p['list4Codes'] = ['\'1990\'', '\'1991\'', '\'1992\'', '\'1993\'', '\'1994\'', '\'1995\'', '\'1996\'', '\'1997\'', '\'1998\'', '\'1999\'',
                            '\'2000\'', '\'2001\'', '\'2002\'', '\'2003\'', '\'2004\'', '\'2005\'', '\'2006\'', '\'2007\'', '\'2008\'', '\'2009\'',
                            '\'2010\'', '\'2011\'', '\'2012\'', '\'2013\'', '\'2014\'', '\'2015\''];
@@ -235,13 +223,11 @@ var GHGEDITOR = (function() {
                 if (typeof json == 'string')
                     json = $.parseJSON(response);
                 var data = [];
-                var year = 1990;
                 for (var i = json.length - 1 ; i >= 0 ; i--) {
                     var tmp = [];
                     tmp.push(Date.UTC(parseInt(json[i][10])));
                     tmp.push(parseFloat(json[i][13]));
                     data.push(tmp);
-                    year++;
                 }
                 series.setData(data);
             },
@@ -293,7 +279,7 @@ var GHGEDITOR = (function() {
     };
 
     /* Create the tables through Mustache templating. */
-    function createTable(render_id, title, start_year, end_year, id_prefix, callback) {
+    function createTable(render_id, title, start_year, end_year, id_prefix, chart_id, callback) {
 
         /* Load template. */
         $.get('html/templates.html', function (templates) {
@@ -351,25 +337,30 @@ var GHGEDITOR = (function() {
 
             /* Bind callback (if any) */
             if (callback != null)
-                callback();
+                callback(chart_id);
 
         });
 
     };
 
-    function addDataToEntericFermentation() {
-        var inputs = $('input[id^=country_new_data_4A_]');
-        var chart = $('#chart_2').highcharts();
-        for (var i = 0; i < inputs.length; i++) {
-            $(inputs[i]).keyup(function() {
-                var data = [];
-                var year = Date.UTC(parseInt(inputs[i].id.substring(1 + inputs[i].id.indexOf('country_new_data_4A_'))));
-                var value = parseFloat($(inputs[i]).val());
-                var tmp = [year, value];
-                data.push(tmp);
-                chart.series[1].setData(data);
-            });
-        }
+    function addDataToChart(chart_id) {
+        $('input[id^=country_new_data_4A_]').keyup(function () {
+            var inputs = $('input[id^=country_new_data_4A_]');
+            var data = [];
+            var chart = $('#' + chart_id).highcharts();
+            for (var i = 0 ; i < inputs.length ; i++) {
+                var year = Date.UTC(parseInt(inputs[i].id.substring(1 + inputs[i].id.lastIndexOf('_'))));
+                var value = parseFloat($(inputs[i]  ).val());
+                if (!isNaN(value) && value >= 0) {
+                    var tmp = [year, value];
+                    data.push(tmp);
+                } else {
+                    var tmp = [year, null];
+                    data.push(tmp);
+                }
+            }
+            chart.series[2].setData(data);
+        });
     };
 
     // TODO Example of adding point to a chart
