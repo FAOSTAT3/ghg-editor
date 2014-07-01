@@ -7,7 +7,7 @@ var GHGEDITOR = (function() {
     function init() {
 
         /* Initiate tables. */
-        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', 'chart_2', ['country_new_data_4A_', 'country_new_data_4B_'], [2, 3], addDataToChart);
+        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', addDataToCharts);
         createTable('emissions_db_nc', 'Emissions Database - National Communication', 1990, 2015, 'emissions_db_nc');
         createTable('emissions_db_faostat', 'Emissions Database - FAOSTAT', 1990, 2015, 'emissions_db_faostat');
         createTable('cnd_fs_difference', '% Difference (CountryNewData - FAOSTAT) / FAOSTAT', 1990, 2015, 'cnd_fs_difference');
@@ -279,7 +279,7 @@ var GHGEDITOR = (function() {
     };
 
     /* Create the tables through Mustache templating. */
-    function createTable(render_id, title, start_year, end_year, id_prefix, chart_id, input_prefixes, series_indices, callback) {
+    function createTable(render_id, title, start_year, end_year, id_prefix, callback) {
 
         /* Load template. */
         $.get('html/templates.html', function (templates) {
@@ -337,13 +337,20 @@ var GHGEDITOR = (function() {
 
             /* Bind callback (if any) */
             if (callback != null)
-                callback(input_prefixes, series_indices, chart_id);
+                callback();
 
         });
 
     };
 
-    function addDataToChart(input_prefixes, series_indices, chart_id) {
+    function addDataToCharts() {
+        addDataToSingleChart(['country_new_data_4_'], [1], 'chart_1');
+        addDataToSingleChart(['country_new_data_4A_', 'country_new_data_4B_'], [2, 3], 'chart_2');
+        addDataToSingleChart(['country_new_data_4C_', 'country_new_data_4D_'], [2, 3], 'chart_3');
+        addDataToSingleChart(['country_new_data_4E_', 'country_new_data_4F_'], [2, 3], 'chart_4');
+    };
+
+    function addDataToSingleChart(input_prefixes, series_indices, chart_id) {
         for (var z = 0 ; z < input_prefixes.length ; z++) {
             $('input[id^=' + input_prefixes[z] + ']').data({series_idx: series_indices[z]});
             $('input[id^=' + input_prefixes[z] + ']').keyup(function () {
