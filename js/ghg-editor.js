@@ -52,7 +52,12 @@ var GHGEDITOR = (function() {
 
             /* Get selected country. */
             var country = $('#country_selector').find(":selected").val();
+
+            /* Create charts. */
             createCharts(country);
+
+            /* Populate tables. */
+            populateTable_EmissionsDatabaseFAOSTAT();
 
         });
 
@@ -202,7 +207,7 @@ var GHGEDITOR = (function() {
         p.thousand = '.';
         p.decimal = ',';
         p.decPlaces = 2;
-        p.limit = 100;
+        p.limit = -1;
         p['list1Codes'] = ['\'' + country + '\''];
         p['list3Codes'] = ['\'' + item + '\''];
         p['list2Codes'] = ['\'' + element + '\''];
@@ -373,28 +378,83 @@ var GHGEDITOR = (function() {
         }
     };
 
-    // TODO Example of adding point to a chart
-    function addPointToChart1() {
-        var chart = $('#chart_1').highcharts();
-        var data = [];
-        var inputs = $('input');
-        for (var i = 0 ; i < inputs.length ; i++) {
-            if (inputs[i].id.indexOf('4_') > -1) {
-                var year = inputs[i].id.substring(1 + inputs[i].id.indexOf('_'));
-                var value = $(inputs[i]).val();
-                var tmp = [];
-                tmp.push(Date.UTC(parseInt(year)));
-                tmp.push(parseFloat(value));
-                data.push(tmp);
+    function populateTable_EmissionsDatabaseFAOSTAT() {
+        var country = $('#country_selector').find(":selected").val();
+        var p = {};
+        p.datasource = 'faostat';
+        p.domainCode = 'GT';
+        p.lang = 'E';
+        p.nullValues = true;
+        p.thousand = '.';
+        p.decimal = ',';
+        p.decPlaces = 2;
+        p.limit = -1;
+        p['list1Codes'] = ['\'' + country + '\''];
+        p['list2Codes'] = ['\'7231\''];
+        p['list3Codes'] = ['\'5058\'', '\'5059\'', '\'5060\'', '\'5066\'', '\'5067\'', '\'1709\'', '\'1711\''];
+        p['list4Codes'] = ['\'1990\'', '\'1991\'', '\'1992\'', '\'1993\'', '\'1994\'', '\'1995\'', '\'1996\'', '\'1997\'', '\'1998\'', '\'1999\'',
+                           '\'2000\'', '\'2001\'', '\'2002\'', '\'2003\'', '\'2004\'', '\'2005\'', '\'2006\'', '\'2007\'', '\'2008\'', '\'2009\'',
+                           '\'2010\'', '\'2011\'', '\'2012\'', '\'2013\'', '\'2014\'', '\'2015\''];
+        p['list5Codes'] = [];
+        p['list6Codes'] = [];
+        p['list7Codes'] = [];
+        var data = {};
+        data.payload = JSON.stringify(p);
+        $.ajax({
+            type: 'POST',
+            url: 'http://localhost:8080/wds/rest/procedures/data',
+            data: data,
+            success: function (response) {
+                var json = response;
+                if (typeof json == 'string')
+                    json = $.parseJSON(response);
+                for (var i = 1 ; i < json.length ; i++) {
+                    var item = json[i][8];
+                    var y = json[i][10];
+                    var v = json[i][13];
+                    var crf = null;
+                    switch (item) {
+                        case '1711': crf = '4';  break;
+                        case '5058': crf = '4A'; break;
+                        case '5059': crf = '4B'; break;
+                        case '5060': crf = '4C'; break;
+                        case '1709': crf = '4D'; break;
+                        case '5067': crf = '4E'; break;
+                        case '5066': crf = '4F'; break;
+                    }
+                    $('#emissions_db_faostat_' + crf + '_' + y).val(parseFloat(v));
+                }
+            },
+            error: function (e, b, c) {
+                console.log(e);
+                console.log(b);
+                console.log(c);
             }
-        }
-        chart.series[1].setData(data);
+        });
     };
+
+    // TODO Example of adding point to a chart
+//    function addPointToChart1() {
+//        var chart = $('#chart_1').highcharts();
+//        var data = [];
+//        var inputs = $('input');
+//        for (var i = 0 ; i < inputs.length ; i++) {
+//            if (inputs[i].id.indexOf('4_') > -1) {
+//                var year = inputs[i].id.substring(1 + inputs[i].id.indexOf('_'));
+//                var value = $(inputs[i]).val();
+//                var tmp = [];
+//                tmp.push(Date.UTC(parseInt(year)));
+//                tmp.push(parseFloat(value));
+//                data.push(tmp);
+//            }
+//        }
+//        chart.series[1].setData(data);
+//    };
 
     return {
         CONFIG : CONFIG,
         init : init,
-        addPointToChart1:addPointToChart1,
+//        addPointToChart1:addPointToChart1,
         showHideTable: showHideTable,
         showHideCharts: showHideCharts
     };
