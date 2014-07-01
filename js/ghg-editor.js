@@ -7,7 +7,7 @@ var GHGEDITOR = (function() {
     function init() {
 
         /* Initiate tables. */
-        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', 'chart_2', addDataToChart);
+        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', 'chart_2', ['country_new_data_4A_', 'country_new_data_4B_'], [2, 3], addDataToChart);
         createTable('emissions_db_nc', 'Emissions Database - National Communication', 1990, 2015, 'emissions_db_nc');
         createTable('emissions_db_faostat', 'Emissions Database - FAOSTAT', 1990, 2015, 'emissions_db_faostat');
         createTable('cnd_fs_difference', '% Difference (CountryNewData - FAOSTAT) / FAOSTAT', 1990, 2015, 'cnd_fs_difference');
@@ -24,7 +24,7 @@ var GHGEDITOR = (function() {
         $.ajax({
 
             type: 'GET',
-            url: 'http://faostat3.fao.org/wds/rest/procedures/countries/faostat/GT/E',
+            url: 'http://localhost:8080/wds/rest/procedures/countries/faostat/GT/E',
             dataType: 'json',
 
             success: function (response) {
@@ -279,7 +279,7 @@ var GHGEDITOR = (function() {
     };
 
     /* Create the tables through Mustache templating. */
-    function createTable(render_id, title, start_year, end_year, id_prefix, chart_id, callback) {
+    function createTable(render_id, title, start_year, end_year, id_prefix, chart_id, input_prefixes, series_indices, callback) {
 
         /* Load template. */
         $.get('html/templates.html', function (templates) {
@@ -337,30 +337,33 @@ var GHGEDITOR = (function() {
 
             /* Bind callback (if any) */
             if (callback != null)
-                callback(chart_id);
+                callback(input_prefixes, series_indices, chart_id);
 
         });
 
     };
 
-    function addDataToChart(chart_id) {
-        $('input[id^=country_new_data_4A_]').keyup(function () {
-            var inputs = $('input[id^=country_new_data_4A_]');
-            var data = [];
-            var chart = $('#' + chart_id).highcharts();
-            for (var i = 0 ; i < inputs.length ; i++) {
-                var year = Date.UTC(parseInt(inputs[i].id.substring(1 + inputs[i].id.lastIndexOf('_'))));
-                var value = parseFloat($(inputs[i]  ).val());
-                if (!isNaN(value) && value >= 0) {
-                    var tmp = [year, value];
-                    data.push(tmp);
-                } else {
-                    var tmp = [year, null];
-                    data.push(tmp);
+    function addDataToChart(input_prefixes, series_indices, chart_id) {
+        for (var z = 0 ; z < input_prefixes.length ; z++) {
+            $('input[id^=' + input_prefixes[z] + ']').data({series_idx: series_indices[z]});
+            $('input[id^=' + input_prefixes[z] + ']').keyup(function () {
+                var inputs = $('input[id^=' + this.id.substring(0, this.id.lastIndexOf('_')) + ']');
+                var data = [];
+                var chart = $('#' + chart_id).highcharts();
+                for (var i = 0; i < inputs.length; i++) {
+                    var year = Date.UTC(parseInt(inputs[i].id.substring(1 + inputs[i].id.lastIndexOf('_'))));
+                    var value = parseFloat($(inputs[i]).val());
+                    if (!isNaN(value) && value >= 0) {
+                        var tmp = [year, value];
+                        data.push(tmp);
+                    } else {
+                        var tmp = [year, null];
+                        data.push(tmp);
+                    }
                 }
-            }
-            chart.series[2].setData(data);
-        });
+                chart.series[$.data(this, 'series_idx')].setData(data);
+            });
+        }
     };
 
     // TODO Example of adding point to a chart
