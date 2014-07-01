@@ -49,19 +49,19 @@ var GHGEDITOR = (function() {
 
         /* Create charts and load tables on country selection change. */
         $('#country_selector').on('change', function() {
-
-            /* Get selected country. */
-            var country = $('#country_selector').find(":selected").val();
-
-            /* Create charts. */
-            createCharts(country);
-
-            /* Populate tables. */
-            populateTable_EmissionsDatabaseFAOSTAT();
-
+            var country_code = $('#country_selector').find(":selected").val();
+            createChartsAndPopulateTable(country_code);
         });
 
+        /* Load configuration files. */
+        document.getElementById('files').addEventListener('change', handlefilescatter, false);
+
     };
+
+    function createChartsAndPopulateTable(country_code) {
+        createCharts(country_code);
+        populateTable_EmissionsDatabaseFAOSTAT(country_code);
+    }
 
     function createCharts(country) {
 
@@ -359,10 +359,6 @@ var GHGEDITOR = (function() {
     function addDataToSingleChart(input_prefixes, series_indices, chart_id) {
 
         /* Iterate over all the needed rows. */
-        console.log(input_prefixes);
-        console.log(series_indices);
-        console.log(chart_id);
-        console.log(input_prefixes.length);
         for (var z = 0 ; z < input_prefixes.length ; z++) {
 
             /* Store series index. */
@@ -390,8 +386,6 @@ var GHGEDITOR = (function() {
                 /* Add points to the chart. */
                 try {
                     chart.series[$.data(this, 'series_idx')].update({data: data});
-                    if (chart_id == 'chart_1')
-                        console.log(data);
                 } catch (e) {
                     alert('Please Select a Country');
                 }
@@ -417,8 +411,7 @@ var GHGEDITOR = (function() {
         }
     };
 
-    function populateTable_EmissionsDatabaseFAOSTAT() {
-        var country = $('#country_selector').find(":selected").val();
+    function populateTable_EmissionsDatabaseFAOSTAT(country_code) {
         var p = {};
         p.datasource = 'faostat';
         p.domainCode = 'GT';
@@ -428,7 +421,7 @@ var GHGEDITOR = (function() {
         p.decimal = ',';
         p.decPlaces = 2;
         p.limit = -1;
-        p['list1Codes'] = ['\'' + country + '\''];
+        p['list1Codes'] = ['\'' + country_code + '\''];
         p['list2Codes'] = ['\'7231\''];
         p['list3Codes'] = ['\'5058\'', '\'5059\'', '\'5060\'', '\'5066\'', '\'5067\'', '\'1709\'', '\'1711\''];
         p['list4Codes'] = ['\'1990\'', '\'1991\'', '\'1992\'', '\'1993\'', '\'1994\'', '\'1995\'', '\'1996\'', '\'1997\'', '\'1998\'', '\'1999\'',
@@ -470,13 +463,50 @@ var GHGEDITOR = (function() {
                 console.log(c);
             }
         });
-    };
+    }
+
+    function exportData() {
+        var data = {};
+        var inputs = $('input[id^=country_new_data_]');
+        for (var i = 0 ; i < inputs.length ; i++)
+            data[inputs[i].id] = $(inputs[i]).val();
+        data.country_code = $('#country_selector').find(":selected").val();
+        var a = document.createElement('a');
+        a.href = 'data:application/json,' + JSON.stringify(data);
+        a.target = '_blank';
+        a.download = $('#country_selector').find(":selected").val() + '_country_data.json';
+        document.body.appendChild(a);
+        a.click();
+    }
+
+    function handlefilescatter(e) {
+        var files = e.target.files;
+        for (var i = 0, f; f = files[i]; i++) {
+            var reader = new FileReader();
+            reader.onload = (function(theFile) {
+                return function(e) {
+                    var json = $.parseJSON(e.target.result);
+                    for (var key in json) {
+                        var value = parseFloat(json[key]);
+                        if (!isNaN(value) && value >= 0)
+                            $('#' + key).val(value);
+                    }
+                    createChartsAndPopulateTable(json.country_code);
+                };
+            })(f);
+            reader.readAsText(f);
+        }
+    }
+
+
 
     return {
-        CONFIG : CONFIG,
-        init : init,
-        showHideTable: showHideTable,
-        showHideCharts: showHideCharts
+        CONFIG              :   CONFIG,
+        init                :   init,
+        showHideTable       :   showHideTable,
+        showHideCharts      :   showHideCharts,
+        exportData          :   exportData,
+        handlefilescatter   :   handlefilescatter
     };
 
 })();
