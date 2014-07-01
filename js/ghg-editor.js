@@ -187,6 +187,7 @@ var GHGEDITOR = (function() {
         for (var i = 0 ; i < series.length ; i++) {
             p.series[i] = {};
             p.series[i].name = series[i].name;
+            p.series[i].type = 'column';
         }
         $('#' + chart_id).highcharts(p);
         var chart = $('#' + chart_id).highcharts();
@@ -356,10 +357,22 @@ var GHGEDITOR = (function() {
     };
 
     function addDataToSingleChart(input_prefixes, series_indices, chart_id) {
+
+        /* Iterate over all the needed rows. */
+        console.log(input_prefixes);
+        console.log(series_indices);
+        console.log(chart_id);
+        console.log(input_prefixes.length);
         for (var z = 0 ; z < input_prefixes.length ; z++) {
+
+            /* Store series index. */
             $('input[id^=' + input_prefixes[z] + ']').data({series_idx: series_indices[z]});
+
             $('input[id^=' + input_prefixes[z] + ']').keyup(function () {
+
+                /* Add points to the chart. */
                 var inputs = $('input[id^=' + this.id.substring(0, this.id.lastIndexOf('_')) + ']');
+                console.log(inputs.length);
                 var data = [];
                 var chart = $('#' + chart_id).highcharts();
                 for (var i = 0; i < inputs.length; i++) {
@@ -373,7 +386,33 @@ var GHGEDITOR = (function() {
                         data.push(tmp);
                     }
                 }
-                chart.series[$.data(this, 'series_idx')].setData(data);
+
+                /* Add points to the chart. */
+                try {
+                    chart.series[$.data(this, 'series_idx')].update({data: data});
+                    if (chart_id == 'chart_1')
+                        console.log(data);
+                } catch (e) {
+                    alert('Please Select a Country');
+                }
+
+                /* Update Tables. */
+                var value = parseFloat($(this).val());
+                if (!isNaN(value)) {
+                    var year = this.id.substring(1 + this.id.lastIndexOf('_'));
+                    var crf = this.id.substring('country_new_data_'.length, this.id.lastIndexOf('_'));
+                    var faostat = parseFloat($('#emissions_db_faostat_' + crf + '_' + year).val());
+                    var diff = ((value - faostat) / faostat).toFixed(2);
+                    var color = (diff >= 0) ? 'green' : 'red';
+                    $('#cnd_fs_difference_' + crf + '_' + year).val(diff + '%');
+                    $('#cnd_fs_difference_' + crf + '_' + year).css('color', color);
+                    var tot = parseFloat($('#emissions_db_faostat_4_' + year).val());
+                    var norm = ((value - faostat) / tot).toFixed(2);
+                    color = (norm >= 0) ? 'green' : 'red';
+                    $('#normalised_cnd_fs_difference_' + crf + '_' + year).val(norm + '%');
+                    $('#normalised_cnd_fs_difference_' + crf + '_' + year).css('color', color);
+                }
+
             });
         }
     };
@@ -433,28 +472,9 @@ var GHGEDITOR = (function() {
         });
     };
 
-    // TODO Example of adding point to a chart
-//    function addPointToChart1() {
-//        var chart = $('#chart_1').highcharts();
-//        var data = [];
-//        var inputs = $('input');
-//        for (var i = 0 ; i < inputs.length ; i++) {
-//            if (inputs[i].id.indexOf('4_') > -1) {
-//                var year = inputs[i].id.substring(1 + inputs[i].id.indexOf('_'));
-//                var value = $(inputs[i]).val();
-//                var tmp = [];
-//                tmp.push(Date.UTC(parseInt(year)));
-//                tmp.push(parseFloat(value));
-//                data.push(tmp);
-//            }
-//        }
-//        chart.series[1].setData(data);
-//    };
-
     return {
         CONFIG : CONFIG,
         init : init,
-//        addPointToChart1:addPointToChart1,
         showHideTable: showHideTable,
         showHideCharts: showHideCharts
     };
