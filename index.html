@@ -36,23 +36,42 @@
             <div class='row'>
                 <div class='page-header'>
                     <h1>
-                        <i class='fa fa-info-circle'></i> GHG Editor <button onclick='GHGEDITOR.exportData();'>Export</button>
-                        <input type="file" id="files" name="files[]" name="file_source" size="40">
+                        <i class='fa fa-info-circle'></i> GHG Editor
                     </h1>
                 </div>
             </div>
 
             <!-- Country selector. -->
-            <div class='row'>
-                <div class='col-xs-12 col-sm-2 col-md-2 col-lg-2'>
-                    <div style='line-height: 34px;'>
-                        Please select a country:
+            <div class='row' style='margin-top: -15px;'>
+                <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
+                    <div class='ghg_editor_title'>
+                        Select a Country
                     </div>
                 </div>
-                <div class='col-xs-12 col-sm-10 col-md-10 col-lg-10'>
+                <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
+                    <div class='ghg_editor_title'>
+                        Download Data
+                    </div>
+                </div>
+                <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
+                    <div class='ghg_editor_title'>
+                        Upload Data
+                    </div>
+                </div>
+            </div>
+            <div class='row'>
+                <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
                     <select id='country_selector' style='width: 100%;' id='country-list' data-placeholder='Please select a source...' class='selector'>
 
                     </select>
+                </div>
+                <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
+                    <button style='width: 100%;' class='btn btn-default' onclick='GHGEDITOR.exportData();'>
+                        <i class='fa fa-download'></i> Download
+                    </button>
+                </div>
+                <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
+                    <input style='width: 100%;' class='form-control' type='file' id='files' name='files[]' name='file_source'>
                 </div>
             </div>
 

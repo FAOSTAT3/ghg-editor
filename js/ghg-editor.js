@@ -7,13 +7,13 @@ var GHGEDITOR = (function() {
     function init() {
 
         /* Initiate tables. */
-        createTable('country_new_data', 'Country New Data', 1990, 2015, 'country_new_data', addDataToCharts);
-        createTable('emissions_db_nc', 'Emissions Database - National Communication', 1990, 2015, 'emissions_db_nc');
-        createTable('emissions_db_faostat', 'Emissions Database - FAOSTAT', 1990, 2015, 'emissions_db_faostat');
-        createTable('cnd_fs_difference', '% Difference (CountryNewData - FAOSTAT) / FAOSTAT', 1990, 2015, 'cnd_fs_difference');
-        createTable('normalised_cnd_fs_difference', 'Normalised % difference (CountryNewData - FAOSTAT) / FAOSTAT ', 1990, 2015, 'normalised_cnd_fs_difference');
-        createTable('cnd_nc_difference', '% Difference (CountryNewData - NC) / NC', 1990, 2015, 'cnd_nc_difference');
-        createTable('normalised_cnd_nc_difference', 'Normalised % Difference (CountryNewData - NC) / NC', 1990, 2015, 'normalised_cnd_nc_difference');
+        createTable('country_new_data', true, 'Country New Data', 1990, 2011, 'country_new_data', addDataToCharts);
+        createTable('emissions_db_nc', false, 'Emissions Database - National Communication', 1990, 2011, 'emissions_db_nc');
+        createTable('emissions_db_faostat', false, 'Emissions Database - FAOSTAT', 1990, 2011, 'emissions_db_faostat');
+        createTable('cnd_fs_difference', false, '% Difference (FAOSTAT)', 1990, 2011, 'cnd_fs_difference');
+        createTable('normalised_cnd_fs_difference', false, 'Normalised % difference (FAOSTAT)', 1990, 2011, 'normalised_cnd_fs_difference');
+        createTable('cnd_nc_difference', false, '% Difference (NC)', 1990, 2011, 'cnd_nc_difference');
+        createTable('normalised_cnd_nc_difference', false, 'Normalised % Difference (NC)', 1990, 2011, 'normalised_cnd_nc_difference');
 
         /* Initiate Chosen. */
         $('.selector').chosen({
@@ -285,7 +285,7 @@ var GHGEDITOR = (function() {
     };
 
     /* Create the tables through Mustache templating. */
-    function createTable(render_id, title, start_year, end_year, id_prefix, callback) {
+    function createTable(render_id, is_editable, title, start_year, end_year, id_prefix, callback) {
 
         /* Load template. */
         $.get('html/templates.html', function (templates) {
@@ -328,7 +328,11 @@ var GHGEDITOR = (function() {
             };
 
             /* Load the right template. */
-            var template = $(templates).filter('#g1_table').html();
+            var template = null;
+            if (is_editable)
+                template = $(templates).filter('#g1_table_editable').html();
+            else
+                template = $(templates).filter('#g1_table').html();
 
             /* Substitute placeholders. */
             var render = render = Mustache.render(template, view);
@@ -395,15 +399,16 @@ var GHGEDITOR = (function() {
                 if (!isNaN(value)) {
                     var year = this.id.substring(1 + this.id.lastIndexOf('_'));
                     var crf = this.id.substring('country_new_data_'.length, this.id.lastIndexOf('_'));
-                    var faostat = parseFloat($('#emissions_db_faostat_' + crf + '_' + year).val());
-                    var diff = ((value - faostat) / faostat).toFixed(2);
+                    var faostat = parseFloat(document.getElementById('emissions_db_faostat_' + crf + '_' + year).innerHTML);
+                    var diff = (100 * (value - faostat) / faostat).toFixed(2);
                     var color = (diff >= 0) ? 'green' : 'red';
-                    $('#cnd_fs_difference_' + crf + '_' + year).val(diff + '%');
+                    document.getElementById('cnd_fs_difference_' + crf + '_' + year).innerHTML = diff + '%';
                     $('#cnd_fs_difference_' + crf + '_' + year).css('color', color);
                     var tot = parseFloat($('#emissions_db_faostat_4_' + year).val());
-                    var norm = ((value - faostat) / tot).toFixed(2);
+                    var tot = parseFloat(document.getElementById('emissions_db_faostat_4_' + year).innerHTML);
+                    var norm = (100 * (value - faostat) / tot).toFixed(2);
                     color = (norm >= 0) ? 'green' : 'red';
-                    $('#normalised_cnd_fs_difference_' + crf + '_' + year).val(norm + '%');
+                    document.getElementById('normalised_cnd_fs_difference_' + crf + '_' + year).innerHTML = norm + '%';
                     $('#normalised_cnd_fs_difference_' + crf + '_' + year).css('color', color);
                 }
 
@@ -454,7 +459,8 @@ var GHGEDITOR = (function() {
                         case '5067': crf = '4E'; break;
                         case '5066': crf = '4F'; break;
                     }
-                    $('#emissions_db_faostat_' + crf + '_' + y).val(parseFloat(v));
+//                    $('#emissions_db_faostat_' + crf + '_' + y).val(parseFloat(v));
+                    document.getElementById('emissions_db_faostat_' + crf + '_' + y).innerHTML = v;
                 }
             },
             error: function (e, b, c) {

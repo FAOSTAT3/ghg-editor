@@ -9,3 +9,8 @@
 .table_cell.year {
     text-align: center;
 }
+
+.ghg_editor_title {
+    padding: 4px;
+    color: #777777;
+}
