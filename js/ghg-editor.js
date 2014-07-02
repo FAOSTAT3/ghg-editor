@@ -313,6 +313,7 @@ var GHGEDITOR = (function() {
             /* Define placeholders. */
             var view = {
                 section_name: id_prefix,
+                spinning_id: id_prefix + '_spinning',
                 collapse_id: id_prefix + '_collapse_button',
                 title: title,
                 left_table_id: id_prefix + '_left_table',

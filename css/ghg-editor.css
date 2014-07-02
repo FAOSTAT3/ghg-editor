@@ -14,3 +14,8 @@
     padding: 4px;
     color: #777777;
 }
+
+.chosen-single {
+    height: 34px !important;
+    line-height: 34px !important;
+}
