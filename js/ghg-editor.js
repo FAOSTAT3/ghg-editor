@@ -210,7 +210,7 @@ var GHGEDITOR = (function() {
                 datasource: 'nc'
             }
         ];
-        createChart('chart_1', $.i18n.prop('_agriculture_total'), series_1, add_user_data);
+        createChart('chart_1', '<b>' + $.i18n.prop('_agriculture_total') + '</b>', series_1, add_user_data);
 
         /* Chart 2 Definition. */
         var series_2 = [
@@ -247,7 +247,7 @@ var GHGEDITOR = (function() {
                 datasource: 'nc'
             }
         ];
-        createChart('chart_2', $.i18n.prop('_enteric_fermentation') + ' y ' + $.i18n.prop('_manure_management'), series_2, add_user_data);
+        createChart('chart_2', '<b>' + $.i18n.prop('_enteric_fermentation') + ' y ' + $.i18n.prop('_manure_management') + '</b>', series_2, add_user_data);
 
         /* Chart 3 Definition. */
         var series_3 = [
@@ -268,7 +268,7 @@ var GHGEDITOR = (function() {
                 datasource: 'nc'
             }
         ];
-        createChart('chart_3', $.i18n.prop('_rice_cultivation'), series_3, add_user_data);
+        createChart('chart_3', '<b>' + $.i18n.prop('_rice_cultivation') + '</b>', series_3, add_user_data);
 
         /* Chart 4 Definition. */
         var series_4 = [
@@ -289,7 +289,7 @@ var GHGEDITOR = (function() {
                 datasource: 'nc'
             }
         ];
-        createChart('chart_4', $.i18n.prop('_agricultural_soils'), series_4, add_user_data);
+        createChart('chart_4', '<b>' + $.i18n.prop('_agricultural_soils') + '</b>', series_4, add_user_data);
 
         /* Chart 5 Definition. */
         var series_5 = [
@@ -326,7 +326,7 @@ var GHGEDITOR = (function() {
                 datasource: 'nc'
             }
         ];
-        createChart('chart_5', $.i18n.prop('_prescribed_burning_of_savannas') + ' y ' + $.i18n.prop('_field_burning_of_agricultural_residues'), series_5, add_user_data);
+        createChart('chart_5', '<b>' + $.i18n.prop('_prescribed_burning_of_savannas') + ' y ' + $.i18n.prop('_field_burning_of_agricultural_residues') + '</b>', series_5, add_user_data);
 
     };
 
@@ -334,6 +334,7 @@ var GHGEDITOR = (function() {
     function createChart(chart_id, title, series, add_user_data) {
         var p = {
             chart: {
+                zoomType: 'xy',
                 events: {
                     load: function() {
                         for (var i = 0 ; i < series.length ; i++) {
@@ -344,6 +345,9 @@ var GHGEDITOR = (function() {
                 }
             },
             colors: ['#1f678a', '#92a8b7', '#a68122', '#ffd569', '#439966', '#7bb793'],
+            credits: {
+              enabled: false
+            },
             title: {
                 text: title,
                 x: -20
@@ -356,7 +360,7 @@ var GHGEDITOR = (function() {
             },
             yAxis: {
                 title: {
-                    text: 'CO2Eq (Gg)'
+                    text: 'CO<sub>2</sub>Eq (Gg)'
                 },
                 plotLines: [{
                     value: 0,
@@ -374,7 +378,19 @@ var GHGEDITOR = (function() {
                 layout: 'horizontal',
                 align: 'center',
                 verticalAlign: 'bottom',
-                borderWidth: 0
+                borderWidth: 0,
+                width: 500,
+                itemWidth: 250,
+                itemStyle: {
+                    width: 230
+                }
+            },
+            plotOptions: {
+                series: {
+                    marker: {
+                        symbol: 'circle'
+                    }
+                }
             }
         };
         p.series = [];
@@ -437,9 +453,7 @@ var GHGEDITOR = (function() {
                 prepare_chart_data(series, response, datasource);
             },
             error: function (e, b, c) {
-//                console.log(e);
-//                console.log(b);
-//                console.log(c);
+
             }
         });
     };
@@ -462,10 +476,10 @@ var GHGEDITOR = (function() {
                 for (var i = json.length - 1 ; i >= 0 ; i--) {
                     var tmp = [];
                     if (json[i].length > 1) {
-                        tmp.push(Date.UTC(parseInt(json[i][0])));
+                        tmp.push(Date.UTC(parseInt(json[i][0]), 0, 1));
                         tmp.push(parseFloat(json[i][1]));
                     } else {
-                        tmp.push(Date.UTC(parseInt(json[i][0])));
+                        tmp.push(Date.UTC(parseInt(json[i][0]), 0, 1));
                         tmp.push(null);
                     }
                     data.push(tmp);
