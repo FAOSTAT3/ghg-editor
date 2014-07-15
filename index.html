@@ -7,16 +7,18 @@
         <meta name='viewport' content='width=device-width, initial-scale=1.0'>
 
         <script type='text/javascript' src='http://code.jquery.com/jquery-1.10.1.min.js'></script>
+        <script type='text/javascript' src='http://fenixapps.fao.org/repository/js/jquery/1.0.9/jquery.i18n.properties-min.js'></script>
         <script type='text/javascript' src='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/js/bootstrap.min.js'></script>
         <script type='text/javascript' src='http://fenixapps.fao.org/repository/js/chosen/1.0.0/chosen.jquery.min.js'></script>
         <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.js'></script>
         <script type='text/javascript' src='http://code.highcharts.com/highcharts.js'></script>
+
+        <!-- To avoid replication in the code. -->
         <script type='text/javascript' src='js/ghg-editor.js'></script>
 
         <link href='http://netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css' rel='stylesheet'>
         <link href='http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet'>
         <link href='http://fenixapps.fao.org/repository/js/chosen/1.0.0/chosen.min.css' rel='stylesheet'>
-        <link href='http://cdnjs.cloudflare.com/ajax/libs/mustache.js/0.8.1/mustache.min.js' rel='stylesheet'>
         <link href='css/ghg-editor.css' rel='stylesheet'>
 
     </head>
@@ -38,17 +40,17 @@
             <div class='row' style='margin-top: -15px;'>
                 <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
                     <div class='ghg_editor_title'>
-                        Select a Country
+                        Seleccione un pa&iacute;s
                     </div>
                 </div>
                 <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
                     <div class='ghg_editor_title'>
-                        Download Data
+                        Descargar datos
                     </div>
                 </div>
                 <div class='col-xs-12 col-sm-4 col-md-4 col-lg-4'>
                     <div class='ghg_editor_title'>
-                        Upload Data
+                        Cargar datos
                     </div>
                 </div>
             </div>
@@ -82,16 +84,18 @@
                         <a name='charts' style='cursor: pointer;' onclick='GHGEDITOR.showHideCharts();'>
                             <i id='charts_collapse_button' class='fa fa-compress fa-border'></i>
                         </a>
-                        Charts <i class='fa fa-refresh fa-spin'></i>
+                        Graficos
                     </h1>
                 </div>
             </div>
-            <div class='row'>
-                <div id='charts_container'>
-                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+            <div id='charts_container'>
+                <div class='row'>
+                    <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
                         <div style='width: 100%;' id='chart_1'>
                         </div>
                     </div>
+                </div>
+                <div class='row'>
                     <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
                         <div style='width: 100%;' id='chart_2'>
                         </div>
@@ -100,8 +104,14 @@
                         <div style='width: 100%;' id='chart_3'>
                         </div>
                     </div>
+                </div>
+                <div class='row'>
                     <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
                         <div style='width: 100%;' id='chart_4'>
+                        </div>
+                    </div>
+                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                        <div style='width: 100%;' id='chart_5'>
                         </div>
                     </div>
                 </div>
