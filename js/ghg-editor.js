@@ -2,12 +2,12 @@ var GHGEDITOR = (function() {
 
     var CONFIG = {
         data            :   null,
-        base_url        :   'http://localhost:8080',
+        base_url        :   'http://fenixapps.fao.org/repository',
         url_templates   :   'ghg-editor/html/templates.html',
-        url_procedures  :   'http://faostat3.fao.org/wds/rest/procedures/countries/faostat/GT/E',
+        url_procedures  :   'http://faostat3.fao.org/wds/rest/procedures/countries/faostat/GT/S',
         url_data        :   'http://faostat3.fao.org/wds/rest/table/json',
         url_editor      :   'http://localhost:8080/ghg-editor/',
-        url_i18n        :   'http://localhost:8080/ghg-editor/I18N/'
+        url_i18n        :   'http://fenixapps.fao.org/repository/ghg-editor/I18N/'
     };
 
     function init() {
@@ -21,7 +21,7 @@ var GHGEDITOR = (function() {
         });
 
         /* Initiate tables. */
-        createTable('country_new_data', true, 'Country New Data', 1990, 2012, 'country_new_data', addDataToCharts);
+        createTable('country_new_data', true, 'Nuevos Datos del Pais', 1990, 2012, 'country_new_data', addDataToCharts);
         createTable('emissions_db_nc', false, 'Base de datos de Emisiones - NC', 1990, 2012, 'emissions_db_nc');
         createTable('emissions_db_faostat', false, 'Base de datos de Emisiones - FAOSTAT ', 1990, 2012, 'emissions_db_faostat');
         createTable('cnd_fs_difference', false, '% Diferencia (FAOSTAT)', 1990, 2012, 'cnd_fs_difference');
@@ -223,20 +223,20 @@ var GHGEDITOR = (function() {
                 datasource: 'faostat'
             },
             {
-                name: $.i18n.prop('_manure_management') + ' (FAOSTAT)',
-                domain: 'GT',
-                country: country,
-                item: '5059',
-                element: '7231',
-                datasource: 'faostat'
-            },
-            {
                 name: $.i18n.prop('_enteric_fermentation') + ' (NC)',
                 domain: 'GT',
                 country: country,
                 item: '4.A',
                 element: null,
                 datasource: 'nc'
+            },
+            {
+                name: $.i18n.prop('_manure_management') + ' (FAOSTAT)',
+                domain: 'GT',
+                country: country,
+                item: '5059',
+                element: '7231',
+                datasource: 'faostat'
             },
             {
                 name: $.i18n.prop('_manure_management') + ' (NC)',
@@ -302,20 +302,20 @@ var GHGEDITOR = (function() {
                 datasource: 'faostat'
             },
             {
-                name: $.i18n.prop('_field_burning_of_agricultural_residues')  + ' (FAOSTAT)',
-                domain: 'GT',
-                country: country,
-                item: '5066',
-                element: '7231',
-                datasource: 'faostat'
-            },
-            {
                 name: $.i18n.prop('_prescribed_burning_of_savannas')  + ' (NC)',
                 domain: 'GT',
                 country: country,
                 item: '4.E',
                 element: null,
                 datasource: 'nc'
+            },
+            {
+                name: $.i18n.prop('_field_burning_of_agricultural_residues')  + ' (FAOSTAT)',
+                domain: 'GT',
+                country: country,
+                item: '5066',
+                element: '7231',
+                datasource: 'faostat'
             },
             {
                 name: $.i18n.prop('_field_burning_of_agricultural_residues')  + ' (NC)',
@@ -334,6 +334,8 @@ var GHGEDITOR = (function() {
     function createChart(chart_id, title, series, add_user_data) {
         var p = {
             chart: {
+                height: 400,
+                spacingBottom: 50,
                 zoomType: 'xy',
                 events: {
                     load: function() {
@@ -344,7 +346,7 @@ var GHGEDITOR = (function() {
                     }
                 }
             },
-            colors: ['#1f678a', '#92a8b7', '#a68122', '#ffd569', '#439966', '#7bb793'],
+            colors: ['#1f678a', '#1f678a', '#92a8b7', '#92a8b7', '#800432', '#439966'],
             credits: {
               enabled: false
             },
@@ -372,18 +374,25 @@ var GHGEDITOR = (function() {
                 }
             },
             tooltip: {
-                valueSuffix: ' Gg'
+                valueSuffix: ' Gg',
+                year: '%Y',
+                crosshairs: [true, true],
+                formatter: function() {
+                    return '<b>' + this.series.name + '</b><br>' + (new Date(this.x)).getFullYear() + ': ' + this.y + ' Gg'
+                }
             },
             legend: {
                 layout: 'horizontal',
                 align: 'center',
                 verticalAlign: 'bottom',
                 borderWidth: 0,
-                width: 500,
-                itemWidth: 250,
+                width: 580,
+                itemWidth: 290,
                 itemStyle: {
-                    width: 230
-                }
+                    width: 260
+                },
+                floating: true,
+                y : 45
             },
             plotOptions: {
                 series: {
@@ -399,16 +408,59 @@ var GHGEDITOR = (function() {
             p.series[i].name = series[i].name;
         }
         $('#' + chart_id).highcharts(p);
+
+        var chart = $('#' + chart_id).highcharts();
+
         if (add_user_data) {
             var chart = $('#' + chart_id).highcharts();
             var number_of_series = series.length;
             var user_series = number_of_series / 2;
             for (var i = 0; i < user_series; i++) {
-                chart.addSeries({
-                    name: chart.series[i].name.replace('(FAOSTAT)', '(User Data)')
+                if (chart.series[i].name.indexOf('FAOSTAT') > -1) {
+                    chart.addSeries({
+                        name: chart.series[i].name.replace('(FAOSTAT)', '(User Data)'),
+                        marker: {
+                            enabled: true
+                        },
+                        type: 'scatter'
+                    });
+                } else {
+                    chart.addSeries({
+                        name: chart.series[i].name.replace('(NC)', '(User Data)'),
+                        marker: {
+                            enabled: true
+                        },
+                        type: 'scatter'
+                    });
+                }
+            }
+        }
+
+        for (var i = 0; i < series.length; i++) {
+            if (chart.series[i].name.indexOf('NC') > -1) {
+                chart.series[i].update({
+                    marker: {
+                        enabled: true
+                    },
+                    type: 'scatter'
+                });
+            } else if (chart.series[i].name.indexOf('FAOSTAT') > -1) {
+                chart.series[i].update({
+                    marker: {
+                        enabled: false
+                    },
+                    type: 'line'
+                });
+            } else if (chart.series[i].name.indexOf('User Data') > -1) {
+                chart.series[i].update({
+                    marker: {
+                        enabled: true
+                    },
+                    type: 'scatter'
                 });
             }
         }
+
     };
 
     /* Query DB and prepare the payload for the charts. */
@@ -427,13 +479,15 @@ var GHGEDITOR = (function() {
                                "AND D.AreaCode = A.AreaCode " +
                                "AND D.ElementListCode = E.ElementListCode " +
                                "AND D.ItemCode = I.ItemCode " +
-                               "GROUP BY A.AreaNameS, E.ElementListNameS, I.ItemNameS, I.ItemCode, D.Year, D.value";
+                               "GROUP BY A.AreaNameS, E.ElementListNameS, I.ItemNameS, I.ItemCode, D.Year, D.value " +
+                               "ORDER BY D.Year DESC ";
                 break;
             case 'nc':
                     sql['query'] = "SELECT year, GUNFValue FROM UNFCCC_Comparison WHERE areacode = " + country + " AND code = '" + item + "' " +
                                    "AND year IN (1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, " +
                                                 "2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, " +
-                                                "2010, 2011, 2012)";
+                                                "2010, 2011, 2012) " +
+                                   "ORDER BY year DESC ";
                 break;
         }
         var data = {};

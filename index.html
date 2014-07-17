@@ -20,6 +20,7 @@
         <link href='http://netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css' rel='stylesheet'>
         <link href='http://fenixapps.fao.org/repository/js/chosen/1.0.0/chosen.min.css' rel='stylesheet'>
         <link href='css/ghg-editor.css' rel='stylesheet'>
+        <link href='css/analysis.css' rel='stylesheet'>
 
     </head>
 
@@ -30,8 +31,8 @@
             <!-- Page title. -->
             <div class='row'>
                 <div class='page-header'>
-                    <h1>
-                        <i class='fa fa-info-circle'></i> GHG Editor
+                    <h1 class="ghg-title">
+                        Garant&iacute;a de calidad
                     </h1>
                 </div>
             </div>
@@ -70,93 +71,97 @@
                 </div>
             </div>
 
-            <!-- Country New Data. -->
-            <div class='row'>
-                <div id='country_new_data'>
-                    <i class='fa fa-refresh fa-spin fa-5x'></i>
-                </div>
-            </div>
+            <div id='main_content_emissions'>
 
-            <!-- Charts. -->
-            <div class='row'>
-                <div class='page-header'>
-                    <h1>
-                        <a name='charts' style='cursor: pointer;' onclick='GHGEDITOR.showHideCharts();'>
-                            <i id='charts_collapse_button' class='fa fa-compress fa-border'></i>
-                        </a>
-                        Graficos
-                    </h1>
-                </div>
-            </div>
-            <div id='charts_container'>
+                <!-- Country New Data. -->
                 <div class='row'>
-                    <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
-                        <div style='width: 100%;' id='chart_1'>
+                    <div id='country_new_data'>
+                        <i class='fa fa-refresh fa-spin fa-5x'></i>
+                    </div>
+                </div>
+
+                <!-- Charts. -->
+                <div class='row'>
+                    <div class='page-header'>
+                        <h1>
+                            <a name='charts' style='cursor: pointer;' onclick='GHGEDITOR.showHideCharts();'>
+                                <i id='charts_collapse_button' class='fa fa-compress fa-border'></i>
+                            </a>
+                            Graficos
+                        </h1>
+                    </div>
+                </div>
+                <div id='charts_container'>
+                    <div class='row'>
+                        <div class='col-xs-12 col-sm-12 col-md-12 col-lg-12'>
+                            <div style='width: 100%;' id='chart_1'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row' style='margin-top: 50px;'>
+                        <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                            <div style='width: 100%;' id='chart_2'>
+                            </div>
+                        </div>
+                        <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                            <div style='width: 100%;' id='chart_3'>
+                            </div>
+                        </div>
+                    </div>
+                    <div class='row' style='margin-top: 50px;'>
+                        <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                            <div style='width: 100%;' id='chart_4'>
+                            </div>
+                        </div>
+                        <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
+                            <div style='width: 100%;' id='chart_5'>
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class='row' style='margin-top: 50px;'>
-                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                        <div style='width: 100%;' id='chart_2'>
-                        </div>
-                    </div>
-                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                        <div style='width: 100%;' id='chart_3'>
-                        </div>
+
+                <!-- Emissions Database - National Communication -->
+                <div class='row'>
+                    <div id='emissions_db_nc'>
+                        <i class='fa fa-refresh fa-spin fa-5x'></i>
                     </div>
                 </div>
-                <div class='row' style='margin-top: 50px;'>
-                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                        <div style='width: 100%;' id='chart_4'>
-                        </div>
-                    </div>
-                    <div class='col-xs-12 col-sm-6 col-md-6 col-lg-6'>
-                        <div style='width: 100%;' id='chart_5'>
-                        </div>
+
+                <!-- Emissions Database - FAOSTAT -->
+                <div class='row'>
+                    <div id='emissions_db_faostat'>
+                        <i class='fa fa-refresh fa-spin fa-5x'></i>
                     </div>
                 </div>
-            </div>
 
-            <!-- Emissions Database - National Communication -->
-            <div class='row'>
-                <div id='emissions_db_nc'>
-                    <i class='fa fa-refresh fa-spin fa-5x'></i>
+                <!-- % Difference (CountryNewData - FAOSTAT) / FAOSTAT -->
+                <div class='row'>
+                    <div id='cnd_fs_difference'>
+                        <i class='fa fa-refresh fa-spin fa-5x'></i>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Emissions Database - FAOSTAT -->
-            <div class='row'>
-                <div id='emissions_db_faostat'>
-                    <i class='fa fa-refresh fa-spin fa-5x'></i>
+                <!-- Normalised % difference (CountryNewData - FAOSTAT) / FAOSTAT -->
+                <div class='row'>
+                    <div id='normalised_cnd_fs_difference'>
+                        <i class='fa fa-refresh fa-spin fa-5x'></i>
+                    </div>
                 </div>
-            </div>
 
-            <!-- % Difference (CountryNewData - FAOSTAT) / FAOSTAT -->
-            <div class='row'>
-                <div id='cnd_fs_difference'>
-                    <i class='fa fa-refresh fa-spin fa-5x'></i>
+                <!-- % Difference (CountryNewData - NC) / NC -->
+                <div class='row'>
+                    <div id='cnd_nc_difference'>
+                        <i class='fa fa-refresh fa-spin fa-5x'></i>
+                    </div>
                 </div>
-            </div>
 
-            <!-- Normalised % difference (CountryNewData - FAOSTAT) / FAOSTAT -->
-            <div class='row'>
-                <div id='normalised_cnd_fs_difference'>
-                    <i class='fa fa-refresh fa-spin fa-5x'></i>
+                <!-- Normalised % Difference (CountryNewData - NC) / NC -->
+                <div class='row'>
+                    <div id='normalised_cnd_nc_difference'>
+                        <i class='fa fa-refresh fa-spin fa-5x'></i>
+                    </div>
                 </div>
-            </div>
 
-            <!-- % Difference (CountryNewData - NC) / NC -->
-            <div class='row'>
-                <div id='cnd_nc_difference'>
-                    <i class='fa fa-refresh fa-spin fa-5x'></i>
-                </div>
-            </div>
-
-            <!-- Normalised % Difference (CountryNewData - NC) / NC -->
-            <div class='row'>
-                <div id='normalised_cnd_nc_difference'>
-                    <i class='fa fa-refresh fa-spin fa-5x'></i>
-                </div>
             </div>
 
         </div>
